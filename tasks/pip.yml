@@ -33,6 +33,50 @@
   register: result
   until: result is success
   notify: Reload application
+- name: Set openwisp2_python_packages
+  set_fact:
+    openwisp2_python_packages: "{{ openwisp2_python_packages | default([]) }}"
+
+- name: Set custom package list
+  set_fact:
+    openwisp2_python_packages: "{{ openwisp2_python_packages + [item] }}"
+  with_items:
+    - "{{ openwisp2_controller_pip }}"
+    - "{{ openwisp2_notifications_pip }}"
+    - "{{ openwisp2_users_pip }}"
+    - "{{ openwisp2_utils_pip }}"
+    - "{{ openwisp2_django_x509_pip }}"
+    - "{{ openwisp2_django_loci_pip }}"
+    - "{{ openwisp2_netjsonconfig_pip }}"
+  when: item is string
+
+- name: Add network_topology to custom package list if set and enabled
+  set_fact:
+    openwisp2_python_packages: "{{ openwisp2_python_packages + [item] }}"
+  with_items:
+    - "{{ openwisp2_network_topology_pip }}"
+  when: item is defined and item is string and openwisp2_network_topology
+
+- name: Add openwisp_radius to custom package list if set and enabled
+  set_fact:
+    openwisp2_python_packages: "{{ openwisp2_python_packages + [item] }}"
+  with_items:
+    - "{{ openwisp2_radius_pip }}"
+  when: item is defined and item is string and openwisp2_radius
+
+- name: Add firmware_upgrader to custom package list if set and enabled
+  set_fact:
+    openwisp2_python_packages: "{{ openwisp2_python_packages + [item] }}"
+  with_items:
+    - "{{ openwisp2_firmware_upgrader_pip }}"
+  when: item is defined and item is string and openwisp2_firmware_upgrader
+
+- name: Add monitoring to custom package list if set and enabled
+  set_fact:
+    openwisp2_python_packages: "{{ openwisp2_python_packages + [item] }}"
+  with_items:
+    - "{{ openwisp2_monitoring_pip }}"
+  when: item is defined and item is string and openwisp2_monitoring
 
 - name: Install openwisp2 controller and its dependencies
   pip:
