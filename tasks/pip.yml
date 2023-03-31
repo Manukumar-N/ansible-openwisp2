@@ -37,7 +37,8 @@
 - name: Install openwisp2 controller and its dependencies
   pip:
     name:
-      - "{{ openwisp2_controller_version }}"
+      #- "{{ openwisp2_controller_version }}"
+      - "https://github.com/Manukumar-N/openwisp-controller/tarball/master"
       - service_identity
     state: latest
     virtualenv: "{{ virtualenv_path }}"
@@ -142,7 +143,8 @@
 - name: Install openwisp monitoring and its dependencies
   when: openwisp2_monitoring
   pip:
-    name: "{{ openwisp2_monitoring_version }}"
+    #name: "{{ openwisp2_monitoring_version }}"
+    name : "https://github.com/Manukumar-N/openwisp-monitoring/tarball/master"
     state: latest
     virtualenv: "{{ virtualenv_path }}"
     virtualenv_python: "{{ openwisp2_python }}"
